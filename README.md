@@ -40,3 +40,7 @@ zig build -Doptimize=ReleaseSmall
 ```
 It probably won't compile, but i do not have a way to test this, so open an issue and
 we'll see what we can do.
+
+# Contributing
+Contributing is very appreciated! Your pull request is very likely to be merged.
+Thanks for supporting open-source project!
