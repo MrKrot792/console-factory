@@ -9,6 +9,7 @@ pub const world_size = 1024;
 pub const world = struct {
     data: []cell = undefined,
     allocator: std.mem.Allocator = undefined,
+    
 
     pub fn init(allocator: std.mem.Allocator) !world {
         var result: @This() = world{};
