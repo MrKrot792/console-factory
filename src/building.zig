@@ -11,7 +11,7 @@ pub const conveyor = struct {
     item: ?item.item,
 
     pub fn init() @This() {
-        return conveyor{.base = .{ .position = math.ivec2{0, 0, 0}, .texture = "[ ]", }, .item = null};
+        return conveyor{.base = .{ .position = math.ivec2{0, 0}}, .item = null};
     }
 
     pub fn tick(this: @This()) void {
@@ -23,7 +23,7 @@ pub const conveyor = struct {
         }
     }
 
-    pub fn get_texture(this: @This()) [3]u8 {
+    pub fn get_texture(this: @This()) *const [3:0]u8 {
         if (this.item != null) {
             return "[x]";
         } else {

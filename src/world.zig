@@ -13,7 +13,7 @@ pub const world = struct {
     pub fn init(allocator: std.mem.Allocator) !world {
         var result: @This() = world{};
         result.allocator = allocator;
-        result.data = allocator.alloc(cell, world_size*world_size); // 64 Mb is a big number!
+        result.data = try allocator.alloc(cell, world_size*world_size); // 64 Mb is a big number!
 
         for(result.data) |*value| {
             value.* = null;
@@ -26,7 +26,11 @@ pub const world = struct {
         this.allocator.free(this.data);
     }
 
-    pub fn get_cell_by_position(this: @This(), position: math.vec2) cell {
-        return this.data[position[0] + position[1] * world_size]; // Scary!
+    pub fn get_cell_by_position(this: @This(), position: math.ivec2) cell {
+        return this.data[@as(usize, @intCast(position[0])) + @as(usize, @intCast(position[1])) * world_size]; // Scary!
+    }
+
+    pub fn set_cell_by_position(this: world, position: @Vector(2,i32), c: cell) void {
+        this.data[@as(usize, @intCast(position[0])) + @as(usize, @intCast(position[1])) * world_size] = c;
     }
 };
