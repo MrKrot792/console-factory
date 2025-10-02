@@ -6,7 +6,7 @@ pub const Direction = enum {
     up, down, right, left,
 };
 
-pub fn get_vector_by_direction(direction: Direction, comptime T: type) T {
+pub fn getVectorByDirection(direction: Direction, comptime T: type) T {
     if (T == ivec2 or T == vec2) {
         return switch (direction) {
             .up    => .{ 0,  1 },
@@ -20,7 +20,7 @@ pub fn get_vector_by_direction(direction: Direction, comptime T: type) T {
     }
 }
 
-// pub fn get_string_by_direction(direction: Direction) u8 {
+// pub fn getStringByDirection(direction: Direction) u8 {
 //     return switch (direction) {
 //         .up    => '↑',
 //         .down  => '↓',

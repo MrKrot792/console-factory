@@ -1,21 +1,21 @@
 const std = @import("std");
 
 // So three tiers for now.
-pub const items = enum {
+pub const Items = enum {
     copper,
     iron,
     titan,
 };
 
-pub const item = struct {
+pub const Item = struct {
     texture: u8,
     name: []const u8,
 };
 
-pub fn getItem(i: items) item {
+pub fn getItem(i: Items) Item {
     return switch (i) {
-        .copper => item{.name = "Copper", .texture = 'C'},
-        .iron   => item{.name = "Iron",   .texture = 'I'},
-        .titan  => item{.name = "Titan",  .texture = 'T'},
+        .copper => Item{.name = "Copper", .texture = 'C'},
+        .iron   => Item{.name = "Iron",   .texture = 'I'},
+        .titan  => Item{.name = "Titan",  .texture = 'T'},
     };
 }

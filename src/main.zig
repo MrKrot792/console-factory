@@ -10,11 +10,11 @@ const c = @cImport({
 const allocator_selector = @import("allocator_selector.zig");
 
 pub fn main() !void {
-    const allocator_info = allocator_selector.get_allocator();
+    const allocator_info = allocator_selector.getAllocator();
     const allocator = allocator_info.allocator;
 
     defer if (allocator_info.is_debug) {
-        switch (allocator_selector.debug_deinit()) {
+        switch (allocator_selector.debugDeinit()) {
             .leak => std.debug.print("You leaked memory dum dum\n", .{}),
             .ok => std.debug.print("No memory leaks. For now...\n", .{}),
         }
@@ -22,24 +22,24 @@ pub fn main() !void {
 
     _ = c.initscr();
 
-    var world: world_type.world = try .init(allocator);
+    var world: world_type.World = try .init(allocator);
     defer world.deinit();
 
-    var world_old: world_type.world = try .init(allocator);
+    var world_old: world_type.World = try .init(allocator);
     defer world_old.deinit();
 
     var dimensions: math.uvec2 = .{0, 0};
     var frame: u32 = 0;
 
-    var conv = building.conveyor.init(null);
+    var conv = building.Conveyor.init(null);
 
     conv.direction = .up;
     conv.item = null;
-    world.set_cell_by_position(.{15, 2}, conv);
+    world.setCellByPosition(.{15, 2}, conv);
 
     conv.direction = .down;
     conv.item = item.getItem(.copper);
-    world.set_cell_by_position(.{15, 3}, conv);
+    world.setCellByPosition(.{15, 3}, conv);
 
     while (true) {
         frame += 1;
@@ -59,8 +59,8 @@ pub fn main() !void {
         // Rendering
         for (0..pixels_per_screen[1]) |y| {
             for (0..pixels_per_screen[0]) |x| {
-                const cell = world.get_cell_by_position(.{@intCast(x), @intCast(y)});
-                _ = c.printw((if (cell == null) "   " else cell.?.get_texture()));
+                const cell = world.getCellByPosition(.{@intCast(x), @intCast(y)});
+                _ = c.printw((if (cell == null) "   " else cell.?.getTexture()));
             }
 
             if(dimensions[0] / 3 * 3 != dimensions[0])

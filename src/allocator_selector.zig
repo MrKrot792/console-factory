@@ -2,12 +2,12 @@ var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
 const builtin = @import("builtin");
 const std = @import("std");
 
-pub const allocator_information = struct {
+pub const AllocatorInformation = struct {
     allocator: std.mem.Allocator,
     is_debug: bool,
 };
 
-pub fn get_allocator() allocator_information {
+pub fn getAllocator() AllocatorInformation {
     const allocator, const is_debug = gpa: {
         break :gpa switch (builtin.mode) {
             .Debug, .ReleaseSafe => .{ debug_allocator.allocator(), true },
@@ -21,6 +21,6 @@ pub fn get_allocator() allocator_information {
     };
 }
 
-pub fn debug_deinit() std.heap.Check {
+pub fn debugDeinit() std.heap.Check {
     return debug_allocator.deinit();
 }
