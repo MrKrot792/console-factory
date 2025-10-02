@@ -2,6 +2,7 @@ const std = @import("std");
 const world_type = @import("world.zig");
 const building = @import("building.zig");
 const math = @import("math.zig");
+const item = @import("item.zig");
 const c = @cImport({
     @cInclude("ncurses.h");
 });
@@ -21,13 +22,24 @@ pub fn main() !void {
 
     _ = c.initscr();
 
-    const world: world_type.world = try .init(allocator);
+    var world: world_type.world = try .init(allocator);
     defer world.deinit();
+
+    var world_old: world_type.world = try .init(allocator);
+    defer world_old.deinit();
 
     var dimensions: math.uvec2 = .{0, 0};
     var frame: u32 = 0;
 
-    world.set_cell_by_position(.{15, 2}, building.conveyor.init());
+    var conv = building.conveyor.init(null);
+
+    conv.direction = .up;
+    conv.item = null;
+    world.set_cell_by_position(.{15, 2}, conv);
+
+    conv.direction = .down;
+    conv.item = item.getItem(.copper);
+    world.set_cell_by_position(.{15, 3}, conv);
 
     while (true) {
         frame += 1;
@@ -35,6 +47,14 @@ pub fn main() !void {
 
         _ = c.erase();
         const pixels_per_screen: math.uvec2 = .{dimensions[0] / 3, dimensions[1]};
+
+        for(world.data) |*value| {
+            if (value.* == null) continue;
+
+            value.*.?.tick(world_old, world);
+        }
+
+        @memcpy(world_old.data, world.data);
 
         // Rendering
         for (0..pixels_per_screen[1]) |y| {
@@ -49,6 +69,7 @@ pub fn main() !void {
 
         // UI
         _ = c.mvprintw(0, 0, "Frame: %d", frame);
+        std.debug.print("Frame: {d}\n", .{frame});
 
         _ = c.refresh();
         if(c.getch() == ' ')
@@ -58,4 +79,5 @@ pub fn main() !void {
     _ = c.endwin();
 
     std.debug.print("Size was: {}x {}y\n", .{dimensions[0] / 3, dimensions[1]});
+    return;
 }
