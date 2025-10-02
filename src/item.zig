@@ -12,8 +12,10 @@ pub const item = struct {
     name: []const u8,
 };
 
-pub const item_map: std.EnumArray(items, item) = .init(.{
-    items.copper,
-    item{ 'a', "copper" },
-    null,
-});
+pub fn getItem(i: items) item {
+    return switch (i) {
+        .copper => item{.name = "Copper", .texture = 'C'},
+        .iron   => item{.name = "Iron",   .texture = 'I'},
+        .titan  => item{.name = "Titan",  .texture = 'T'},
+    };
+}
